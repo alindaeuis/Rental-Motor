@@ -1,0 +1,44 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Freeman", sans-serif;
+  background-color: #0b0b38;
+  font-size: 17px;
+}
+
+.header-form h1 {
+  text-align: center;
+}
+
+.container {
+  background-color: rgb(245, 243, 253);
+  box-shadow: 5px 10px 10px #ffffffcc;
+  width: 45%;
+  padding: 30px;
+  height: 50%;
+  border-radius: 10px;
+  margin: 10% auto;
+  color: #1a1717;
+}
+
+.php-section {
+  text-align: center;
+}
+
+/* .form-field input {
+  width: 20rem;
+} */
+
+b {
+  font-size: 20px;
+}
+
+.copywrite p {
+  text-align: center;
+  color: #fff;
+  text-shadow: -0 -0 8px solid rgb(255, 255, 255);
+
+}
