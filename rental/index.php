@@ -50,42 +50,69 @@
           public $namaPelanggan,
           $waktuRental,
           $jenisMotor;
-          private $member = [],
-                  $hargaMotor = [];
-                  // $diskon;
+          private $member = ["ana", "violine", "alinda", "elsa"],
+                  $hargaMotor = [
+                    "Honda" => 70000,
+                    "Yamaha" => 85000,
+                    "Scooter" => 150000,
+                    "Vespa" => 250000
+                  ];
+
+          protected $pajak = 10000;
+
 
           public function __construct($nama, $waktuRental, $jenisMotor)
           {
             $this->namaPelanggan = $nama;
             $this->waktuRental = $waktuRental;
             $this->jenisMotor = $jenisMotor;
-            $this->member = ["ana", "violine", "alinda", "elsa"];
-            $this->hargaMotor = [
-              "Honda" => 70000,
-              "Yamaha" => 85000,
-              "Scooter" => 150000,
-              "Vespa" => 250000
-            ];
-            // $this->diskon = 5%;
+            // $this->member = ["ana", "violine", "alinda", "elsa"];
+            // $this->hargaMotor = [
+            //   "Honda" => 70000,
+            //   "Yamaha" => 85000,
+            //   "Scooter" => 150000,
+            //   "Vespa" => 250000
+            // ];
           }
 
+          public function getHarga() {
+            return $this->hargaMotor;
+          }
+
+          public function getMember() {
+            return $this->member;
+          }
+
+        }
+        
+        class TotalHargaRental extends RentalMotor {
           public function hitungHargaRental()
           {
             // $jenisMotor = $this->jenisMotor;
-            $hargaPerhari = $this->hargaMotor[$this->jenisMotor];
-            $totalHarga = $hargaPerhari * $this->waktuRental + 10000;
-
-            if (in_array($this->namaPelanggan, $this->member)) {
-              $diskon = $totalHarga * 5/100;
-              $totalHarga -= $diskon;
+            $hargaPerhari = $this->getHarga()[$this->jenisMotor];
+            $totalHarga = $hargaPerhari * $this->waktuRental + $this->pajak;
+  
+            if (in_array($this->namaPelanggan, $this->getMember())) {
+              $totalHarga = ($hargaPerhari * $this->waktuRental) - ($hargaPerhari * 5/100) + $this->pajak;
+              // $diskon = $hargaPerhari * 5/100;
+              // $hargaPerhari -= $diskon;
+              // $totalHarga = ($hargaPerhari * $this->waktuRental) + 10000;
               $statusPelanggan = "<b>".$this->namaPelanggan . "</b>". " berstatus sebagai Member mendapatkan diskon sebesar" . "<b>". " 5%". "</b>";
             } else {
               $statusPelanggan = "<b>". $this->namaPelanggan. "</b>" . " tidak berstatus sebagai Member ";
             }
-            return $statusPelanggan . "<br>" . " Jenis motor yang dirental adalah " . "<b>". $this->jenisMotor. "</b>" . " selama " . "<b>". $this->waktuRental . "</b>". " hari " . "<br>" . " Harga rental per-harinya: " . "<b>". $hargaPerhari . "</b>". "<br><br>" . "Besar yang harus dibayarkan adalah " . "<b>". " Rp " . number_format($totalHarga, 2, ",", "."). "</b>";
-
-
+            return [$statusPelanggan, $totalHarga];
           }
+
+          public function cetakPembayaran() {
+            list($statusPelanggan, $totalHarga) = $this->hitungHargaRental();
+            echo $statusPelanggan . "<br>" . 
+                 " Jenis motor yang dirental adalah " . "<b>". $this->jenisMotor. "</b>" . 
+                 " selama " . "<b>". $this->waktuRental . "</b>". " hari " . "<br>" . 
+                 " Harga rental per-harinya: " . "<b>". $this->getHarga()[$this->jenisMotor] . "</b>". "<br><br>" . 
+                 "Besar yang harus dibayarkan adalah " . "<b>". " Rp " . number_format($totalHarga, 2, ",", "."). "</b>";
+          }
+
         }
 
         if (isset($_POST['submit'])) {
@@ -93,8 +120,8 @@
           $waktuRental = $_POST['waktuRental'];
           $jenisMotor = $_POST['jenisMotor'];
 
-          $rentalMotor = new RentalMotor($namaPelanggan, $waktuRental, $jenisMotor);
-          echo $rentalMotorBaru = $rentalMotor->hitungHargaRental();
+          $rentalMotor = new TotalHargaRental($namaPelanggan, $waktuRental, $jenisMotor);
+          $rentalMotor->cetakPembayaran();
         }
         ?>
       </div>
